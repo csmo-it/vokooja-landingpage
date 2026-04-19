@@ -1,0 +1,45 @@
+# Vokooja Landing Page – .htaccess
+# Target: all-inkl Hosting (vokooja.app)
+
+# HTTPS erzwingen
+RewriteEngine On
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# WWW zu Non-WWW
+RewriteCond %{HTTP_HOST} ^www\.vokooja\.app$ [NC]
+RewriteRule ^(.*)$ https://vokooja.app/$1 [R=301,L]
+
+# Custom Error Pages (optional)
+ErrorDocument 404 /404.html
+ErrorDocument 500 /500.html
+
+# Browser Caching
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/html "access plus 1 hour"
+  ExpiresByType text/css "access plus 1 week"
+  ExpiresByType application/javascript "access plus 1 week"
+  ExpiresByType image/png "access plus 1 month"
+  ExpiresByType image/svg+xml "access plus 1 month"
+</IfModule>
+
+# Security Headers
+<IfModule mod_headers.c>
+  Header set X-Content-Type-Options "nosniff"
+  Header set X-Frame-Options "SAMEORIGIN"
+  Header set X-XSS-Protection "1; mode=block"
+  Header set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+# MIME-Types
+<IfModule mod_mime.c>
+  AddType image/svg+xml svg svgz
+  AddEncoding gzip svgz
+</IfModule>
+
+# Prevent Directory Listing
+Options -Indexes
+
+# UTF-8 Encoding
+AddDefaultCharset UTF-8
